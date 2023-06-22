@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.SqlServer.HierarchyId" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Sentry.Serilog" Version="3.29.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1" />
+  </ItemGroup>
+
+ <ItemGroup>
+    <ProjectReference Include="..\..\libs\MH.DDD\MH.DDD.Core\MH.DDD.Core.csproj" />
+    <ProjectReference Include="..\..\libs\MH.DDD\MH.DDD.DataAccessLayer\MH.DDD.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\..\libs\MH.DDD\MH.DDD.EntityConfigurations\MH.DDD.EntityConfigurations.csproj" />
+    <ProjectReference Include="..\..\libs\MH.DDD\MH.DDD.Shared\MH.DDD.Shared.csproj" />
+  </ItemGroup>
+  
+
+
+  <Target Name="Mapster">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet build" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)$(ProjectName).dll&quot; -o &quot;$(ProjectDir)/Dtos&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a $(TargetDir)$(ProjectName).dll -n $(ProjectName).Mappers -o Mappers" />
+    <!-- <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot;" /> -->
+    <!-- <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)$(ProjectName).dll&quot;" /> -->
+  </Target>
+
+  <ItemGroup>
+    <Generated Include="**\*.g.cs" />
+  </ItemGroup>
+
+  <Target Name="CleanGenerated">
+    <Delete Files="@(Generated)" />
+  </Target>
+
+  
+    <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+</Project>
